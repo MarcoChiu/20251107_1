@@ -12,7 +12,7 @@
 
 ## [最終關卡首頁（前台）](https://codepen.io/hexschool/pen/ExLbePp)
 
-## [最終關卡訂單頁（後台](https://codepen.io/hexschool/pen/WNJXgr)
+## [最終關卡訂單頁（後台)](https://codepen.io/hexschool/pen/WNJXgrR)
 
 ## [圖片](https://github.com/hexschool/js-training) 
 
