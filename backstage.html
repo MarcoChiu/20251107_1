@@ -117,7 +117,7 @@
         let chart = c3.generate({
             bindto: '#chart', // HTML 元素綁定
             data: {
-                type: "pie",
+                type: "donut",
                 columns: [
                     ['Louvre 雙人床架', 1],
                     ['Antony 雙人床架', 2],
@@ -130,6 +130,9 @@
                     "Anty 雙人床架": "#5434A7",
                     "其他": "#301E5F",
                 }
+            },
+            donut: {
+                title: '全品項營收比重'
             },
         });
     </script>
