@@ -1,5 +1,6 @@
+const baseUrl ='https://livejs-api.hexschool.io/api/livejs/v1/';
+const apiPath = 'marcochiu';
 const token = 'bAP1DqdP8HaOrx9SpP0R4a1Dbo03';
-const api_path = 'marcochiu';
 let productsData = [];
 let cartsData = [];
 let ordersData = [];
@@ -36,7 +37,7 @@ function axiosError(error) {
 //查產品
 async function getCustomerProducts() {
 
-    axios.get(`https://livejs-api.hexschool.io/api/livejs/v1/customer/${api_path}/products`)
+    axios.get(`${baseUrl}customer/${apiPath}/products`)
         .then(function (response) {
             productsData = response.data.products;
             console.log(productsData);
@@ -49,7 +50,7 @@ async function getCustomerProducts() {
 //##############Customer Carts##############
 //查購物車
 async function getCustomerCarts() {
-    await axios.get(`https://livejs-api.hexschool.io/api/livejs/v1/customer/${api_path}/carts`)
+    await axios.get(`${baseUrl}customer/${apiPath}/carts`)
         .then(function (response) {
             //console.log(response);
             cartsData = response.data.carts;
@@ -83,7 +84,7 @@ async function postCustomerCarts() {
     //     { "data": { "productId": "tg0o2s4KtJ2i4fqxioWM", "quantity": 15 } }
     // ];
     // tempData.forEach(function (obj) {
-    //     axios.post(`https://livejs-api.hexschool.io/api/livejs/v1/customer/${api_path}/carts`, obj)
+    //     axios.post(`${baseUrl}customer/${apiPath}/carts`, obj)
     //         .then(function (response) {
     //             //console.log(response);
     //             cartsData = response.data.carts;
@@ -102,7 +103,7 @@ async function postCustomerCarts() {
         }
     }
 
-    await axios.post(`https://livejs-api.hexschool.io/api/livejs/v1/customer/${api_path}/carts`, obj)
+    await axios.post(`${baseUrl}customer/${apiPath}/carts`, obj)
         .then(function (response) {
             //console.log(response);
             cartsData = response.data.carts;
@@ -122,7 +123,7 @@ async function patchCustomerCarts() {
             "quantity": 123
         }
     }
-    await axios.patch(`https://livejs-api.hexschool.io/api/livejs/v1/customer/${api_path}/carts/`, obj)
+    await axios.patch(`${baseUrl}customer/${apiPath}/carts/`, obj)
         .then(function (response) {
             //console.log(response);
             cartsData = response.data.carts;
@@ -136,7 +137,7 @@ async function patchCustomerCarts() {
 //刪除單一品項
 async function deleteCustomerCarts(id) {
     //id : 購物車id
-    await axios.delete(`https://livejs-api.hexschool.io/api/livejs/v1/customer/${api_path}/carts/${id}`)
+    await axios.delete(`${baseUrl}customer/${apiPath}/carts/${id}`)
         .then(function (response) {
             //console.log(response);
             cartsData = response.data.carts;
@@ -150,7 +151,7 @@ async function deleteCustomerCarts(id) {
 //刪除全部購物車
 async function deleteCustomerCarts() {
     //id : 購物車id
-    await axios.delete(`https://livejs-api.hexschool.io/api/livejs/v1/customer/${api_path}/carts/`)
+    await axios.delete(`${baseUrl}customer/${apiPath}/carts/`)
         .then(function (response) {
             //console.log(response);
             cartsData = response.data.carts;
@@ -177,7 +178,7 @@ async function postCustomerOrder() {
         }
     }
 
-    await axios.post(`https://livejs-api.hexschool.io/api/livejs/v1/customer/${api_path}/orders`, obj)
+    await axios.post(`${baseUrl}customer/${apiPath}/orders`, obj)
         .then(function (response) {
             //console.log(response);
             //ordersData = response.data.orders;
@@ -191,7 +192,7 @@ async function postCustomerOrder() {
 //##############Admin Orders##############
 //查訂單
 async function getAdminOrders() {
-    await axios.get(`https://livejs-api.hexschool.io/api/livejs/v1/admin/${api_path}/orders`,
+    await axios.get(`${baseUrl}admin/${apiPath}/orders`,
         {
             headers: {
                 'Authorization': token
@@ -215,7 +216,7 @@ async function putAdminOrders(id) {
             "paid": true
         }
     }
-    await axios.put(`https://livejs-api.hexschool.io/api/livejs/v1/admin/${api_path}/orders/`, obj,
+    await axios.put(`${baseUrl}admin/${apiPath}/orders/`, obj,
         {
             headers: {
                 'Authorization': token
@@ -234,7 +235,7 @@ async function putAdminOrders(id) {
 //刪除單訂單
 async function deleteAdminOrders(id) {
     //id : 購物車id
-    await axios.delete(`https://livejs-api.hexschool.io/api/livejs/v1/admin/${api_path}/orders/${id}`,
+    await axios.delete(`${baseUrl}admin/${apiPath}/orders/${id}`,
         {
             headers: {
                 'Authorization': token
@@ -253,7 +254,7 @@ async function deleteAdminOrders(id) {
 //刪除全部訂單
 async function deleteAdminOrders() {
     //id : 購物車id
-    await axios.delete(`https://livejs-api.hexschool.io/api/livejs/v1/admin/${api_path}/orders/`,
+    await axios.delete(`${baseUrl}admin/${apiPath}/orders/`,
         {
             headers: {
                 'Authorization': token
