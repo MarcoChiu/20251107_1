@@ -1,6 +1,7 @@
-const baseUrl ='https://livejs-api.hexschool.io/api/livejs/v1/';
-const apiPath = 'marcochiu';
+const base_Url = 'https://livejs-api.hexschool.io/api/livejs/v1/';
+const api_Path = 'marcochiu';
 const token = 'bAP1DqdP8HaOrx9SpP0R4a1Dbo03';
+const headers = { headers: { "Authorization": token } }; //未來有可能需要其他的
 let productsData = [];
 let cartsData = [];
 let ordersData = [];
@@ -37,7 +38,7 @@ function axiosError(error) {
 //查產品
 async function getCustomerProducts() {
 
-    axios.get(`${baseUrl}customer/${apiPath}/products`)
+    axios.get(`${base_Url}customer/${api_Path}/products`)
         .then(function (response) {
             productsData = response.data.products;
             console.log(productsData);
@@ -50,7 +51,7 @@ async function getCustomerProducts() {
 //##############Customer Carts##############
 //查購物車
 async function getCustomerCarts() {
-    await axios.get(`${baseUrl}customer/${apiPath}/carts`)
+    await axios.get(`${base_Url}customer/${api_Path}/carts`)
         .then(function (response) {
             //console.log(response);
             cartsData = response.data.carts;
@@ -84,7 +85,7 @@ async function postCustomerCarts() {
     //     { "data": { "productId": "tg0o2s4KtJ2i4fqxioWM", "quantity": 15 } }
     // ];
     // tempData.forEach(function (obj) {
-    //     axios.post(`${baseUrl}customer/${apiPath}/carts`, obj)
+    //     axios.post(`${base_Url}customer/${api_Path}/carts`, obj)
     //         .then(function (response) {
     //             //console.log(response);
     //             cartsData = response.data.carts;
@@ -103,7 +104,7 @@ async function postCustomerCarts() {
         }
     }
 
-    await axios.post(`${baseUrl}customer/${apiPath}/carts`, obj)
+    await axios.post(`${base_Url}customer/${api_Path}/carts`, obj)
         .then(function (response) {
             //console.log(response);
             cartsData = response.data.carts;
@@ -123,7 +124,7 @@ async function patchCustomerCarts() {
             "quantity": 123
         }
     }
-    await axios.patch(`${baseUrl}customer/${apiPath}/carts/`, obj)
+    await axios.patch(`${base_Url}customer/${api_Path}/carts/`, obj)
         .then(function (response) {
             //console.log(response);
             cartsData = response.data.carts;
@@ -137,7 +138,7 @@ async function patchCustomerCarts() {
 //刪除單一品項
 async function deleteCustomerCarts(id) {
     //id : 購物車id
-    await axios.delete(`${baseUrl}customer/${apiPath}/carts/${id}`)
+    await axios.delete(`${base_Url}customer/${api_Path}/carts/${id}`)
         .then(function (response) {
             //console.log(response);
             cartsData = response.data.carts;
@@ -151,7 +152,7 @@ async function deleteCustomerCarts(id) {
 //刪除全部購物車
 async function deleteCustomerCarts() {
     //id : 購物車id
-    await axios.delete(`${baseUrl}customer/${apiPath}/carts/`)
+    await axios.delete(`${base_Url}customer/${api_Path}/carts/`)
         .then(function (response) {
             //console.log(response);
             cartsData = response.data.carts;
@@ -178,7 +179,7 @@ async function postCustomerOrder() {
         }
     }
 
-    await axios.post(`${baseUrl}customer/${apiPath}/orders`, obj)
+    await axios.post(`${base_Url}customer/${api_Path}/orders`, obj)
         .then(function (response) {
             //console.log(response);
             //ordersData = response.data.orders;
@@ -192,12 +193,7 @@ async function postCustomerOrder() {
 //##############Admin Orders##############
 //查訂單
 async function getAdminOrders() {
-    await axios.get(`${baseUrl}admin/${apiPath}/orders`,
-        {
-            headers: {
-                'Authorization': token
-            }
-        })
+    await axios.get(`${base_Url}admin/${api_Path}/orders`, headers)
         .then(function (response) {
             //console.log(response);
             ordersData = response.data.orders;
@@ -216,12 +212,7 @@ async function putAdminOrders(id) {
             "paid": true
         }
     }
-    await axios.put(`${baseUrl}admin/${apiPath}/orders/`, obj,
-        {
-            headers: {
-                'Authorization': token
-            }
-        })
+    await axios.put(`${base_Url}admin/${api_Path}/orders/`, obj, headers)
         .then(function (response) {
             //console.log(response);
             ordersData = response.data.orders;
@@ -235,12 +226,7 @@ async function putAdminOrders(id) {
 //刪除單訂單
 async function deleteAdminOrders(id) {
     //id : 購物車id
-    await axios.delete(`${baseUrl}admin/${apiPath}/orders/${id}`,
-        {
-            headers: {
-                'Authorization': token
-            }
-        })
+    await axios.delete(`${base_Url}admin/${api_Path}/orders/${id}`,headers)
         .then(function (response) {
             //console.log(response);
             ordersData = response.data.orders;
@@ -254,12 +240,7 @@ async function deleteAdminOrders(id) {
 //刪除全部訂單
 async function deleteAdminOrders() {
     //id : 購物車id
-    await axios.delete(`${baseUrl}admin/${apiPath}/orders/`,
-        {
-            headers: {
-                'Authorization': token
-            }
-        })
+    await axios.delete(`${base_Url}admin/${api_Path}/orders/`,headers)
         .then(function (response) {
             //console.log(response);
             ordersData = response.data.orders;
