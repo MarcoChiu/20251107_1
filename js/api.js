@@ -1,119 +1,67 @@
-const base_Url = 'https://livejs-api.hexschool.io/api/livejs/v1/';
-const api_Path = 'marcochiu';
+
+//基本參數
+const baseUrl = 'https://livejs-api.hexschool.io/api/livejs/v1';
+const apiPath = 'marcochiu';
 const token = 'bAP1DqdP8HaOrx9SpP0R4a1Dbo03';
-const headers = { headers: { "Authorization": token } }; //未來有可能需要其他的
+const config = { headers: { "Authorization": token } };
+
+//連結
+const productsUrl = `${baseUrl}/customer/${apiPath}/products`; //產品
+const cartsUrl = `${baseUrl}/customer/${apiPath}/carts`; //購物車
+const customerOrdersUrl = `${baseUrl}/customer/${apiPath}/orders`;  //前台post訂單
+const adminOrdersUrl = `${baseUrl}/admin/${apiPath}/orders`;//管理員訂單
+
 let productsData = [];
 let cartsData = [];
 let ordersData = [];
 
 //##############共用##############
 function axiosError(error) {
-    //AI
-    // Handle the error
+    let errorMessage = '';
     if (axios.isAxiosError(error)) {
-        // Axios-specific error handling
         if (error.response) {
-            //console.log(error);
-            // The request was made and the server responded with a status code
-            // that falls out of the range of 2xx
-            // console.error('Message:', error.message);
-            // console.error('Response Error:', error.response.data);
-            // console.error('Status Code:', error.response.status);
-            // console.error('Headers:', error.response.headers);
-            alert(`Status Code:${error.response.status} , Message:${error.response.data.message} `);
+            errorMessage = `${error.response.data.message} `;
         } else if (error.request) {
-            // The request was made but no response was received
-            alert('Request Error:', error.request);
+            errorMessage = `Request Error:', ${error.request}`;
         } else {
-            // Something happened in setting up the request that triggered an Error
-            alert('Error Message:', error.message);
+            errorMessage = 'Error';
         }
     } else {
-        // Generic JavaScript error handling
-        alert('Non-Axios Error:', error);
+        errorMessage = `${error}`;
+    }
+
+    if (errorMessage.length > 0) {
+        Swal.fire({
+            icon: "error",
+            title: "錯誤...",
+            text: errorMessage,
+            //footer: '<a href="#">Why do I have this issue?</a>'
+        });
     }
 }
 
-//##############Customer Products##############
-//查產品
-async function getCustomerProducts() {
-
-    axios.get(`${base_Url}customer/${api_Path}/products`)
-        .then(function (response) {
-            productsData = response.data.products;
-            console.log(productsData);
-        })
-        .catch(function (error) {
-            axiosError(error);
-        });
-}
-
-//##############Customer Carts##############
-//查購物車
-async function getCustomerCarts() {
-    await axios.get(`${base_Url}customer/${api_Path}/carts`)
-        .then(function (response) {
-            //console.log(response);
-            cartsData = response.data.carts;
-            console.log(cartsData);
-        })
-        .catch(function (error) {
-            axiosError(error);
-        });
-}
-
-//新增或修改購物車數量
-async function postCustomerCarts() {
-    //喬丹6尺雙人加大床頭片 6PkWdMDBB5lxUoa2zAE2
-    //安東尼可調高度床邊桌  QrjXKCshVckgKrGTqkzq
-    //Antony 雙人床架／雙人加大 YZAQwt3Q6rXGjxUsPcFY
-    //Charles 系列儲物組合 d7X2DL5cRF5MsHLmpNOE
-    //Louvre 單人床架 dYFboZBUKqFW1ZnIoYQ9
-    //Louvre 雙人床架／雙人加大 j79UktehKjADpHYfKUuG
-    //Antony 遮光窗簾 nYFWTx5coNXRoQz5mIio
-    //Charles 雙人床架 tg0o2s4KtJ2i4fqxioWM
-
-    //測試用
-    // const tempData = [
-    //     { "data": { "productId": "6PkWdMDBB5lxUoa2zAE2", "quantity": 1 } },
-    //     { "data": { "productId": "QrjXKCshVckgKrGTqkzq", "quantity": 3 } },
-    //     { "data": { "productId": "YZAQwt3Q6rXGjxUsPcFY", "quantity": 5 } },
-    //     { "data": { "productId": "d7X2DL5cRF5MsHLmpNOE", "quantity": 7 } },
-    //     { "data": { "productId": "dYFboZBUKqFW1ZnIoYQ9", "quantity": 9 } },
-    //     { "data": { "productId": "j79UktehKjADpHYfKUuG", "quantity": 11 } },
-    //     { "data": { "productId": "nYFWTx5coNXRoQz5mIio", "quantity": 13 } },
-    //     { "data": { "productId": "tg0o2s4KtJ2i4fqxioWM", "quantity": 15 } }
-    // ];
-    // tempData.forEach(function (obj) {
-    //     axios.post(`${base_Url}customer/${api_Path}/carts`, obj)
-    //         .then(function (response) {
-    //             //console.log(response);
-    //             cartsData = response.data.carts;
-    //             console.log(cartsData);
-    //         })
-    //         .catch(function (error) {
-    //             axiosError(error);
-    //         });
-    // });
-
-
-    const obj = {
-        "data": {
-            "productId": "6PkWdMDBB5lxUoa2zAE2",//產品ID
-            "quantity": 120 //數量
-        }
+////////////////GET//////////////
+//https://israynotarray.com/javascript/20220514/1988711685/
+const getData = async (array) => {
+    try {
+        const response = await Promise.all(array.map(x => axios.get(x.url, x.headers)));
+        return response;
+    } catch (error) {
+        axiosError(error);
     }
-
-    await axios.post(`${base_Url}customer/${api_Path}/carts`, obj)
-        .then(function (response) {
-            //console.log(response);
-            cartsData = response.data.carts;
-            console.log(cartsData);
-        })
-        .catch(function (error) {
-            axiosError(error);
-        });
 }
+
+///////////////POST//////////////
+const postData = async (array) => {
+    try {
+        console.log(array);
+        const response = await Promise.all(array.map(x => axios.post(x.url, x.obj, x.headers)));
+        return response;
+    } catch (error) {
+        axiosError(error);
+    }
+}
+
 
 //修改購物車數量
 async function patchCustomerCarts() {
@@ -124,11 +72,9 @@ async function patchCustomerCarts() {
             "quantity": 123
         }
     }
-    await axios.patch(`${base_Url}customer/${api_Path}/carts/`, obj)
+    await axios.patch(`${baseUrl}/customer/${apiPath}/carts/`, obj)
         .then(function (response) {
-            //console.log(response);
             cartsData = response.data.carts;
-            console.log(cartsData);
         })
         .catch(function (error) {
             axiosError(error);
@@ -138,11 +84,9 @@ async function patchCustomerCarts() {
 //刪除單一品項
 async function deleteCustomerCarts(id) {
     //id : 購物車id
-    await axios.delete(`${base_Url}customer/${api_Path}/carts/${id}`)
+    await axios.delete(`${baseUrl}/customer/${apiPath}/carts/${id}`)
         .then(function (response) {
-            //console.log(response);
             cartsData = response.data.carts;
-            console.log(cartsData);
         })
         .catch(function (error) {
             axiosError(error);
@@ -152,11 +96,9 @@ async function deleteCustomerCarts(id) {
 //刪除全部購物車
 async function deleteCustomerCarts() {
     //id : 購物車id
-    await axios.delete(`${base_Url}customer/${api_Path}/carts/`)
+    await axios.delete(`${baseUrl}/customer/${apiPath}/carts/`)
         .then(function (response) {
-            //console.log(response);
             cartsData = response.data.carts;
-            console.log(cartsData);
         })
         .catch(function (error) {
             axiosError(error);
@@ -164,45 +106,10 @@ async function deleteCustomerCarts() {
 }
 
 //##############Customer Orders##############
-//新增購物車至訂單
-async function postCustomerOrder() {
 
-    const obj = {
-        "data": {
-            "user": {
-                "name": "7角學院",
-                "tel": "0912456789",
-                "email": "hexschoolxx@hexschool.com",
-                "address": "台北六角學院路",
-                "payment": "Line Pay"
-            }
-        }
-    }
 
-    await axios.post(`${base_Url}customer/${api_Path}/orders`, obj)
-        .then(function (response) {
-            //console.log(response);
-            //ordersData = response.data.orders;
-            console.log(response.data);
-        })
-        .catch(function (error) {
-            axiosError(error);
-        });
-}
+//##############Admin Orders 以下可拆到另一個js##############
 
-//##############Admin Orders##############
-//查訂單
-async function getAdminOrders() {
-    await axios.get(`${base_Url}admin/${api_Path}/orders`, headers)
-        .then(function (response) {
-            //console.log(response);
-            ordersData = response.data.orders;
-            console.log(ordersData);
-        })
-        .catch(function (error) {
-            axiosError(error);
-        });
-}
 
 //修改為已付款
 async function putAdminOrders(id) {
@@ -212,11 +119,9 @@ async function putAdminOrders(id) {
             "paid": true
         }
     }
-    await axios.put(`${base_Url}admin/${api_Path}/orders/`, obj, headers)
+    await axios.put(`${baseUrl}/admin/${apiPath}/orders/`, obj, config)
         .then(function (response) {
-            //console.log(response);
             ordersData = response.data.orders;
-            console.log(ordersData);
         })
         .catch(function (error) {
             axiosError(error);
@@ -226,11 +131,9 @@ async function putAdminOrders(id) {
 //刪除單訂單
 async function deleteAdminOrders(id) {
     //id : 購物車id
-    await axios.delete(`${base_Url}admin/${api_Path}/orders/${id}`,headers)
+    await axios.delete(`${baseUrl}/admin/${apiPath}/orders/${id}`, config)
         .then(function (response) {
-            //console.log(response);
             ordersData = response.data.orders;
-            console.log(ordersData);
         })
         .catch(function (error) {
             axiosError(error);
@@ -240,15 +143,12 @@ async function deleteAdminOrders(id) {
 //刪除全部訂單
 async function deleteAdminOrders() {
     //id : 購物車id
-    await axios.delete(`${base_Url}admin/${api_Path}/orders/`,headers)
+    await axios.delete(`${baseUrl}/admin/${apiPath}/orders/`, config)
         .then(function (response) {
-            //console.log(response);
             ordersData = response.data.orders;
-            console.log(ordersData);
         })
         .catch(function (error) {
             axiosError(error);
         });
 }
-
 
