@@ -17,6 +17,8 @@
 ## [圖片](https://github.com/hexschool/js-training) 
 
 ## [展示頁](https://marcochiu.github.io/20251107_1/index.html)
+
+## [API整理](https://www.notion.so/API-28f3a2aa0f8880038c71e467e2486c56)
  
 ## 版型資料設計
 - LV 1｜完成前台全部功能
