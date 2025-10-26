@@ -1,4 +1,4 @@
-//##############共用##############
+//##############共用function##############
 function axiosError(error) {
     let errorMessage = '';
     if (axios.isaxiosError(error)) {
@@ -16,9 +16,8 @@ function axiosError(error) {
     if (errorMessage.length > 0) {
         Swal.fire({
             icon: "error",
-            title: "錯誤...",
-            text: errorMessage
-            //footer: '<a href="#">Why do I have this issue?</a>'
+            title: "錯誤!!",
+            text: errorMessage            
         });
     }
 }

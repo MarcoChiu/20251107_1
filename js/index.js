@@ -1,4 +1,9 @@
- // 預設 JS，請同學不要修改此處  
+const productsUrl = `${baseUrl}/customer/${apiPath}/products`; //產品
+const cartsUrl = `${baseUrl}/customer/${apiPath}/carts`; //購物車
+const OrdersUrl = `${baseUrl}/customer/${apiPath}/orders`;  //前台post訂單
+
+//#####################################################################################
+// 預設 JS，請同學不要修改此處  
 document.addEventListener('DOMContentLoaded', function () {
     const ele = document.querySelector('.recommendation-wall');
     ele.style.cursor = 'grab';
