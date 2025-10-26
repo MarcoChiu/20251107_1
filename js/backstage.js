@@ -3,13 +3,6 @@ const token = 'bAP1DqdP8HaOrx9SpP0R4a1Dbo03';
 const headers = { headers: { "Authorization": token } };
 const adminUrl = `${baseUrl}/admin/${apiPath}/orders`;//管理員訂單
 
-
-
-
-
-
-
-
 // C3.js
 let chart = c3.generate({
     bindto: '#chart', // HTML 元素綁定
