@@ -11,7 +11,9 @@
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.26.3/dist/sweetalert2.min.css" rel="stylesheet">
     <link href="./css/style.css" rel="stylesheet">
 </head>
+
 <body>
+
     <body>
         <nav class="topBar">
             <div class="wrap">
@@ -289,7 +291,8 @@
                 <option value="窗簾">窗簾</option>
             </select>
             <ul class="productWrap">
-                <li class="productCard">
+                <li>Loading...</li>
+                <!-- <li class="productCard">
                     <h4 class="productType">新品</h4>
                     <img src="./images/productnew/productnew-01.png" alt="">
                     <a href="#" class="addCardBtn">加入購物車</a>
@@ -352,7 +355,7 @@
                     <h3>Antony 雙人床架／雙人加大</h3>
                     <del class="originPrice">NT$18,000</del>
                     <p class="nowPrice">NT$12,000</p>
-                </li>
+                </li> -->
             </ul>
         </section>
         <!-- 我的購物車 -->
@@ -360,40 +363,47 @@
             <h3 class="section-title">我的購物車</h3>
             <div class="overflowWrap">
                 <table class="shoppingCart-table">
-                    <tr>
-                        <th width="40%">品項</th>
-                        <th width="15%">單價</th>
-                        <th width="15%">數量</th>
-                        <th width="15%">金額</th>
-                        <th width="15%"></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="cardItem-title">
-                                <img src="./images/productnew/productnew-01.png" alt="">
-                                <p>Antony 雙人床架／雙人加大</p>
-                            </div>
-                        </td>
-                        <td>NT$12,000</td>
-                        <td>1</td>
-                        <td>NT$12,000</td>
-                        <td class="discardBtn">
-                            <a href="#" class="material-icons">
-                                clear
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <a href="#" class="discardAllBtn">刪除所有品項</a>
-                        </td>
-                        <td></td>
-                        <td></td>
-                        <td>
-                            <p>總金額</p>
-                        </td>
-                        <td>NT$13,980</td>
-                    </tr>
+                    <thead>
+                        <tr>
+                            <th width="40%">品項</th>
+                            <th width="15%">單價</th>
+                            <th width="15%">數量</th>
+                            <th width="15%">金額</th>
+                            <th width="15%"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="4">Loading...</td>
+                        </tr>
+                        <!-- <tr>
+                            <td>
+                                <div class="cardItem-title">
+                                    <img src="./images/productnew/productnew-01.png" alt="">
+                                    <p>Antony 雙人床架／雙人加大</p>
+                                </div>
+                            </td>
+                            <td>NT$12,000</td>
+                            <td>1</td>
+                            <td>NT$12,000</td>
+                            <td class="discardBtn">
+                                <a href="#" class="material-icons">
+                                    clear
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <a href="#" class="discardAllBtn">刪除所有品項</a>
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <p>總金額</p>
+                            </td>
+                            <td>NT$13,980</td>
+                        </tr> -->
+                    </tbody>
                 </table>
             </div>
         </section>
@@ -444,12 +454,17 @@
                 <input type="submit" value="送出預訂資料" class="orderInfo-btn">
             </form>
         </section>
+
+
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.26.3/dist/sweetalert2.all.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <script src="./js/apiUtilities.js"></script>
         <script src="./js/apiConfig.js"></script>
+        <script src="./js/apiUtilities.js"></script>
+
+
+
         <script src="./js/index.js"></script>
-   
+        <script src="./js/_demo.js"></script>
     </body>
 </body>
 

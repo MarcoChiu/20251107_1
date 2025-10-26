@@ -1,4 +1,4 @@
-const baseUrl ='https://livejs-api.hexschool.io/api/livejs/v1/';
+const baseUrl = 'https://livejs-api.hexschool.io/api/livejs/v1/';
 const apiPath = 'marcochiu';
 const token = 'bAP1DqdP8HaOrx9SpP0R4a1Dbo03';
 let productsData = [];
@@ -19,6 +19,13 @@ function axiosError(error) {
             // console.error('Response Error:', error.response.data);
             // console.error('Status Code:', error.response.status);
             // console.error('Headers:', error.response.headers);
+
+            // Swal.fire({
+            //     icon: "error",
+            //     title: "錯誤!!",
+            //     text: `Status Code:${error.response.status} , Message:${error.response.data.message} `
+            // });
+
             alert(`Status Code:${error.response.status} , Message:${error.response.data.message} `);
         } else if (error.request) {
             // The request was made but no response was received
@@ -37,10 +44,10 @@ function axiosError(error) {
 //查產品
 async function getCustomerProducts() {
 
-    axios.get(`${baseUrl}customer/${apiPath}/products`)
+    axios.get(`${baseUrl}customer/${apiPath}/product`)
         .then(function (response) {
             productsData = response.data.products;
-            console.log(productsData);
+            //console.log(productsData);
         })
         .catch(function (error) {
             axiosError(error);

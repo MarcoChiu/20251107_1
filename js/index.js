@@ -1,6 +1,69 @@
+//共用
 const productsUrl = `${baseUrl}/customer/${apiPath}/products`; //產品
 const cartsUrl = `${baseUrl}/customer/${apiPath}/carts`; //購物車
 const OrdersUrl = `${baseUrl}/customer/${apiPath}/orders`;  //前台post訂單
+
+//陣列
+//let productslist = [];
+
+//物件
+const productWrap = document.querySelector('.productWrap');
+const cartBody = document.querySelector('.shoppingCart-table tbody');
+
+//function
+const rederProducts = (data) => {
+    //console.log(data);
+    let html = '';
+    data.forEach(x => html += `
+         <li class="productCard">
+                    <h4 class="productType">${x.category}</h4>
+                    <img src="${x.images}" alt="${x.description}">
+                    <a href="javascript:void(0)" data-id='${x.id}' class="addCardBtn">加入購物車</a>
+                    <h3>${x.title}</h3>
+                    <del class="originPrice">NT$${x.origin_price}</del>
+                    <p class="nowPrice">NT$${x.price}</p>
+                </li>
+        `);
+    productWrap.innerHTML = html.length > 0 ? html : '<li class="productCard">查無產品資料!!</li>';
+}
+
+const rederProduct = (data) => {
+    //console.log(data);
+    let html = '';
+    data.forEach(x => html += `
+    <tr>
+        <td>
+            <div class="cardItem-title">
+                <img src="" alt="">
+                <p></p>
+            </div>
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td class="discardBtn">
+            <a href="#" class="material-icons">
+                clear
+            </a>
+        </td>
+    </tr>
+        `);
+    cartBody.innerHTML = html.length > 0 ? html : '<tr><td colspan="4">購物車中尚無資料!!</td></tr>';
+}
+
+const init = async () => {
+    try {
+        const response = await getApi([{ url: productsUrl }, { url: cartsUrl }]);
+        rederProducts(response[0].data.products);
+        rederProduct(response[1].data.carts);
+    } catch (error) {
+        axiosError(error);
+    }
+}
+
+//action
+
+init();
 
 //#####################################################################################
 // 預設 JS，請同學不要修改此處  

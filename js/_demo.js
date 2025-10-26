@@ -2,7 +2,7 @@
 // const getTemp = [
 //     { url: productsUrl, headers: null }, //取得所有產品
 //     { url: cartsUrl, headers: null }, //取得目前購物車產品
-//     { url: adminOrdersUrl, headers: headers } //取得後台訂單
+//     { url: adminUrl, headers: headers } //取得後台訂單
 // ];
 
 //取得資料
@@ -14,6 +14,7 @@
 //     });
 
 /////////////POST//////////////
+//新增產品至購物車
 // const postTemp1 = [
 //     { "data": { "productId": "6PkWdMDBB5lxUoa2zAE2", "quantity": 1 } },
 //     { "data": { "productId": "QrjXKCshVckgKrGTqkzq", "quantity": 3 } },
@@ -24,12 +25,13 @@
 //     { "data": { "productId": "nYFWTx5coNXRoQz5mIio", "quantity": 13 } },
 //     { "data": { "productId": "tg0o2s4KtJ2i4fqxioWM", "quantity": 15 } }
 // ];
-// 新增產品至購物車
+
 // postApi(postTemp1.map(x => { return { url: cartsUrl, headers: null, obj: x }; }))
 //     .then((response) => {
 //         console.log(response);
 //     });
 
+// 新增購物車轉訂單
 // const postTemp2 = {
 //     "data": {
 //         "user": {
@@ -41,33 +43,32 @@
 //         }
 //     }
 // }
-// 新增購物車轉訂單
-// postApi([{ url: customerOrdersUrl, headers: null, obj: postTemp2 }])
+
+// postApi([{ url: OrdersUrl, headers: null, obj: postTemp2 }])
 //     .then((response) => {
 //         console.log(response);
 //     });
 
-///////////////Patch////////////// 
+///////////////Patch//////////////
+//修改購物車數量
 // const patchTemp = [
 //     { "data": { "id": "29j5i8TRAChKpKJkUttc", "quantity": 99 } },
 //     { "data": { "id": "6cvUvCLTL50p6iXteulY", "quantity": 88 } }
 // ];
 
-//修改購物車數量
 // patchApi(patchTemp.map(x => { return { url: cartsUrl, headers: null, obj: x }; }))
 //     .then((response) => {
 //         console.log(response);
-//     }); 
+//     });
 
 ///////////////Put//////////////
-
+//修改為已付款
 // const putTemp = [
 //     { "data": { "id": "JFA6APxYnwRPkgzUaBej", "paid": false } },
 //     { "data": { "id": "QxO0iyXCcBjVKZNvMQi1", "paid": false } }
 // ];
 
-//修改為已付款
-// putApi(putTemp.map(x => { return { url: adminOrdersUrl, headers: headers, obj: x }; }))
+// putApi(putTemp.map(x => { return { url: adminUrl, headers: headers, obj: x }; }))
 //     .then((response) => {
 //         console.log(response);
 //     })
@@ -76,19 +77,19 @@
 //     });
 
 ///////////////Delete//////////////
+//刪除購物車或訂單資料
 // const deleteTemp = [
 //     { url: cartsUrl + '/6aTiJhOkGb0dVtMflQHA', headers: null } ,//刪除購物車單一品項
 //     { url: cartsUrl, headers: null },//刪除購物車全部
-//     { url: adminOrdersUrl + '/dyztW76FTnFli0MM3a1G', headers: headers } ,//刪除訂單單一訂單
-//     { url: adminOrdersUrl  , headers: headers } //刪除全部訂單
+//     { url: adminUrl + '/dyztW76FTnFli0MM3a1G', headers: headers } ,//刪除訂單單一訂單
+//     { url: adminUrl  , headers: headers } //刪除全部訂單
 // ];
 
-//刪除購物車或訂單資料
+
 // deleteApi(deleteTemp)
 //     .then((response) => {
 //         console.log(response);
 //     });
 
 
- 
- 
+
