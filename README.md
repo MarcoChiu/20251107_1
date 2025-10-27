@@ -8,7 +8,7 @@
 
 ## [API 線上測試文件](https://hexschool.github.io/hexschoolliveswagger/)
 
-## [codepen 範例程式碼](https://codepen.io/hexschool/pen/JjERgYq?editors=0010)
+## [codepen 範例程式碼](https://codepen.io/hexschool/pen/JjERgYq)
 
 ## [最終關卡首頁（前台）](https://codepen.io/hexschool/pen/ExLbePp)
 

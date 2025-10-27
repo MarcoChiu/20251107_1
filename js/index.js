@@ -7,10 +7,15 @@ const OrdersUrl = `${baseUrl}/customer/${apiPath}/orders`;  //前台post訂單
 //let productslist = [];
 
 //物件
+const loading = document.querySelector('.loading-mask');
+//reder用
 const productWrap = document.querySelector('.productWrap');
 const cartBody = document.querySelector('.shoppingCart-table tbody');
+//addEventListener用
+const productSelect = document.querySelector('.productSelect');
+const shoppingCartTable = document.querySelector('.shoppingCart-table');
 
-//function
+//render
 const rederProducts = (data) => {
     //console.log(data);
     let html = '';
@@ -18,50 +23,88 @@ const rederProducts = (data) => {
          <li class="productCard">
                     <h4 class="productType">${x.category}</h4>
                     <img src="${x.images}" alt="${x.description}">
-                    <a href="javascript:void(0)" data-id='${x.id}' class="addCardBtn">加入購物車</a>
+                    <a href="javascript:void(0);" data-id='${x.id}' class="addCardBtn">加入購物車</a>
                     <h3>${x.title}</h3>
-                    <del class="originPrice">NT$${x.origin_price}</del>
-                    <p class="nowPrice">NT$${x.price}</p>
+                    <del class="originPrice">NT$${formatNumber(x.origin_price)}</del>
+                    <p class="nowPrice">NT$${formatNumber(x.price)}</p>
                 </li>
         `);
     productWrap.innerHTML = html.length > 0 ? html : '<li class="productCard">查無產品資料!!</li>';
 }
 
-const rederProduct = (data) => {
+const redercarts = (data) => {
     //console.log(data);
-    let html = '';
-    data.forEach(x => html += `
+    let tBody = '';
+    data.forEach(x => tBody += `
     <tr>
         <td>
             <div class="cardItem-title">
-                <img src="" alt="">
-                <p></p>
+                <img src="${x.product.images}" alt="${x.product.description}">
+                <p>${x.product.title}</p>
             </div>
         </td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td class="discardBtn">
-            <a href="#" class="material-icons">
+        <td>NT$${formatNumber(x.product.origin_price)}</td>
+        <td>${formatNumber(x.quantity)}</td>
+        <td>NT$${formatNumber(x.product.price)}</td>
+        <td class="discardBtn" data-id='${x.id}'>
+            <a href="javascript:void(0);" class="material-icons">
                 clear
             </a>
         </td>
     </tr>
         `);
-    cartBody.innerHTML = html.length > 0 ? html : '<tr><td colspan="4">購物車中尚無資料!!</td></tr>';
+    cartBody.innerHTML = tBody.length > 0 ? tBody : '<tr><td colspan="4">購物車中尚無資料!!</td></tr>';
+
+
 }
 
+//function
 const init = async () => {
+    loading.style.display = '';
     try {
         const response = await getApi([{ url: productsUrl }, { url: cartsUrl }]);
         rederProducts(response[0].data.products);
-        rederProduct(response[1].data.carts);
+        redercarts(response[1].data.carts);
     } catch (error) {
         axiosError(error);
+    } finally {
+        loading.style.display = 'none';
     }
 }
 
-//action
+const productSelectChange = async (val) => {
+    loading.style.display = '';
+    try {
+        const response = await getApi([{ url: productsUrl }]);
+        rederProducts(
+            val === "" ?
+                response[0].data.products :
+                response[0].data.products.filter(x => x.category === val)
+        );
+    } catch (error) {
+        axiosError(error);
+    } finally {
+        loading.style.display = 'none';
+    }
+}
+
+//addEventListener
+productSelect.addEventListener('change', (e) => {
+    productSelectChange(e.target.value);
+});
+
+shoppingCartTable.addEventListener("click", (e) => {
+    const discardBtn = e.target.closest(".discardBtn");
+    const discardAllBtn = e.target.closest(".discardAllBtn");
+
+    if (discardBtn) {         
+        console.log(discardBtn);
+        //discardBtn.parentElement.remove();
+    }
+    if (discardAllBtn) {         
+        console.log(discardAllBtn)
+    }
+});
 
 init();
 

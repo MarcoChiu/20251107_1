@@ -1,4 +1,23 @@
 //##############共用function##############
+
+//三位一撇
+function formatNumber(num) { 
+    //AI
+//   const parts = num.toString().split('.');
+//   const integerPart = parts[0];
+//   const decimalPart = parts.length > 1 ? '.' + parts[1] : ''; 
+//   const formattedIntegerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+//   return formattedIntegerPart + decimalPart;
+
+//https://tianbianyu.com/41/
+if (typeof num === 'number') {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  } else {
+    //console.warn('工具方法类警告: 输入参数并非数字类型');
+    return num;
+  };
+}
+
 //https://axios-http.com/zh/docs/handling_errors
 const axiosError = (error) => {
     let title = '';
