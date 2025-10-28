@@ -83,8 +83,9 @@ const init = async () => {
 const productSelectChange = async (val) => {
     loading.classList.toggle('d-none');
     try {
-        const response = await getApi([{ url: productsUrl }]);        
-        (val != "") ? (response[0].data.products = response[0].data.products.filter(x => x.category === val)) : null; rederProducts(response[0].data);   
+        const response = await getApi([{ url: productsUrl }]);
+        (val != "") && (response[0].data.products = response[0].data.products.filter(x => x.category === val));
+        rederProducts(response[0].data);
     } catch (error) {
         axiosError(error);
     } finally {
@@ -102,7 +103,7 @@ cartsTable.addEventListener("click", (e) => {
     const discardAllBtn = e.target.closest(".discardAllBtn");
 
     if (discardBtn) {
-        console.log(discardBtn.getAttribute('data-id'));      
+        console.log(discardBtn.getAttribute('data-id'));
 
         //discardBtn.parentElement.remove();
     }
