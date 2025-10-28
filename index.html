@@ -5,17 +5,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>最終關卡首頁（前台）</title>
+    <!-- google font -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <!-- sweetalert2 -->
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.26.3/dist/sweetalert2.min.css" rel="stylesheet">
-
+    <!-- loading  -->
+    <link href="./css/loading.css" rel="stylesheet">
+    <!-- 原本的style -->
     <link href="./css/style.css" rel="stylesheet">
-    <link href="./css/loadingMask.css" rel="stylesheet">
 </head>
 
 <body>
-
     <nav class="topBar">
         <div class="wrap">
             <h1><a href="#" class="logo">WOWOROOM</a></h1>
@@ -457,18 +459,12 @@
             <input type="submit" value="送出預訂資料" class="orderInfo-btn">
         </form>
     </section>
-
-    <div class="loading-mask d-none">
-        <div class="loading-circle-notch"></div>
-    </div>
-
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.26.3/dist/sweetalert2.all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="./js/Config.js"></script>
     <script src="./js/Utilities.js"></script>
+    <script src="./js/loading.js"></script>
     <script src="./js/index.js"></script>
-
-   <!-- <script src="./js/_demo.js"></script>    -->
 </body>
 
 </html>

@@ -19,14 +19,14 @@ const cartsFooter = document.querySelector('.shoppingCart-table tfoot');
 //order
 const orderInfo = document.querySelector('#orderInfo');
 
-//render
+//render(主要渲染及產生畫面)
 const rederProducts = (data) => {
     let html = '';
     data.products.forEach(x => html += `
          <li class="productCard">
                     <h4 class="productType">${x.category}</h4>
                     <img src="${x.images}" alt="${x.description}">
-                    <a href="javascript:void(0);" data-id='${x.id}' class="addCardBtn">加入購物車</a>
+                    <a href="javascript:void(0);" data-id='${x.id}'  class="addCardBtn">加入購物車</a>
                     <h3>${x.title}</h3>
                     <del class="originPrice">NT$${formatNumber(x.origin_price)}</del>
                     <p class="nowPrice">NT$${formatNumber(x.price)}</p>
@@ -36,14 +36,16 @@ const rederProducts = (data) => {
 }
 
 const redercarts = (data) => {
-    if (data.carts.length == 0) {
-        shoppingCart.classList.add('d-none');
-        orderInfo.classList.add('d-none');
-        return;
-    }
+    //個人
+    // if (data.carts.length === 0) {
+    //     [shoppingCart, orderInfo].forEach(el => el.classList.add('d-none'));
+    //     return;
+    // } else {
+    //     [shoppingCart, orderInfo].forEach(el => el.classList.remove('d-none'));
+    // }
 
-    shoppingCart.classList.remove('d-none');
-    orderInfo.classList.remove('d-none');
+    //AI 優化
+    [shoppingCart, orderInfo].forEach(el => el.classList.toggle('d-none', data.carts.length === 0));
 
     let html = '';
     data.carts.forEach(x => html += `
@@ -55,7 +57,11 @@ const redercarts = (data) => {
             </div>
         </td>
         <td>NT$${formatNumber(x.product.origin_price)}</td>
-        <td>${formatNumber(x.quantity)}</td>
+        <td>
+            <button type="button" class="plusBtn" data-id='${x.product.id}'>+</button> 
+             ${formatNumber(x.quantity)}  
+            <button type="button" class="minusBtn" data-id='${x.product.id}'  data-product-title='${x.product.title}'>-</button> 
+        </td>
         <td>NT$${formatNumber(x.product.price)}</td>
         <td class="discardBtn" data-id='${x.id}'  data-product-title='${x.product.title}'>
             <a href="javascript:void(0);" class="material-icons">
@@ -81,9 +87,9 @@ const redercarts = (data) => {
 </tr>`;
 }
 
-//function
+//function(主要處理Loading、資料傳遞及判斷)
 const init = async () => {
-    loading.classList.toggle('d-none');
+    Loading.show();
     try {
         const response = await getApi([{ url: productsUrl }, { url: cartsUrl }]);
         rederProducts(response[0].data);
@@ -91,12 +97,12 @@ const init = async () => {
     } catch (error) {
         axiosError(error);
     } finally {
-        loading.classList.toggle('d-none');
+        Loading.hide();
     }
 }
 
 const productSelectChange = async (val) => {
-    loading.classList.toggle('d-none');
+    Loading.show();
     try {
         const response = await getApi([{ url: productsUrl }]);
         (val != "") && (response[0].data.products = response[0].data.products.filter(x => x.category === val));
@@ -104,14 +110,14 @@ const productSelectChange = async (val) => {
     } catch (error) {
         axiosError(error);
     } finally {
-        loading.classList.toggle('d-none');
+        Loading.hide();
     }
 }
 
-const deleteCartsConfirm = (id = "", productTitle = "") => {
-    const title = (id != "") ? `請問確定刪除${productTitle}?` : "請問確定刪除所有品項?";
+const deleteCartsConfirm = (id = "", title = "") => {
+    const t = (id != "") ? `請問確定刪除${title}?` : "請問確定刪除所有品項?";
     Swal.fire({
-        title: title,
+        title: t,
         showCancelButton: true,
         confirmButtonText: "刪除",
     }).then((result) => {
@@ -122,7 +128,7 @@ const deleteCartsConfirm = (id = "", productTitle = "") => {
 }
 
 const deleteCarts = async (id = "") => {
-    loading.classList.toggle('d-none');
+    Loading.show();
     try {
         const response = await deleteApi([{ url: (id != "") ? cartsUrl + `/${id}` : cartsUrl }]);
         redercarts(response[0].data);
@@ -130,44 +136,63 @@ const deleteCarts = async (id = "") => {
     } catch (error) {
         axiosError(error);
     } finally {
-        loading.classList.toggle('d-none');
+        Loading.hide();
     }
 }
 
-const addCarts = async (id, qty) => {
-    loading.classList.toggle('d-none');
+const cartsEvent = async (id, qty, move = false, title = "") => {
+    Loading.show();
     try {
         let response = await getApi([{ url: cartsUrl }]);
         const q = response[0].data.carts.find(x => x.product.id === id);
-        if (q == null) {
-            response = await postApi([{ url: cartsUrl, obj: { "data": { "productId": id, "quantity": qty } } }]);
 
-        } else {
-            response = await patchApi([{ url: cartsUrl, obj: { "data": { "id": q.id, "quantity": q.quantity + qty } } }]);
+        //減去最後一個時
+        if (q != null && q.quantity + qty <= 0) {
+            deleteCartsConfirm(q.id, title);
+            return;
         }
+
+        //個人
+        // if (q == null) {
+        //     response = await postApi([{ url: cartsUrl, obj: { "data": { "productId": id, "quantity": qty } } }]);
+        // } else {
+        //     response = await patchApi([{ url: cartsUrl, obj: { "data": { "id": q.id, "quantity": q.quantity + qty } } }]);
+        // }
+        //AI 判斷方法  判斷物件
+        response = await (q == null ? postApi : patchApi)
+            ([{
+                url: cartsUrl,
+                obj: {
+                    data: q == null ? { productId: id, quantity: qty } : { id: q.id, quantity: q.quantity + qty }
+                }
+            }]);
+
         redercarts(response[0].data);
+        move && scrollToId('.shoppingCart');
     } catch (error) {
         axiosError(error);
     } finally {
-        loading.classList.toggle('d-none');
+        Loading.hide();
     }
 }
 
-//addEventListener
+//addEventListener(監聽)
 productSelect.addEventListener('change', (e) => {
     productSelectChange(e.target.value);
 });
 
+//大範圍監聽
 document.addEventListener("click", (e) => {
     const discardBtn = e.target.closest(".discardBtn");
     const discardAllBtn = e.target.closest(".discardAllBtn");
     const addCardBtn = e.target.closest(".addCardBtn");
-
+    const plusBtn = e.target.closest(".plusBtn");
+    const minusBtn = e.target.closest(".minusBtn");
     discardBtn && deleteCartsConfirm(discardBtn.dataset.id, discardBtn.dataset.productTitle);
     discardAllBtn && deleteCartsConfirm();
-
-    addCardBtn && addCarts(addCardBtn.dataset.id, 1);
-
+    addCardBtn && cartsEvent(addCardBtn.dataset.id, 1, true);
+    plusBtn && cartsEvent(plusBtn.dataset.id, 1);
+    minusBtn && cartsEvent(minusBtn.dataset.id, -1, false, minusBtn.dataset.productTitle);
 });
 
 init();

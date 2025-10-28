@@ -1,7 +1,16 @@
 //##############共用function##############
 
-//三位一撇
-function formatNumber(num) {
+//AI 平滑到物件  
+const scrollToId = (element) => {
+   
+    const el = document.querySelector(element);
+    if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
+
+//AI 三位一撇
+const formatNumber = (num) => {
     //AI
     //   const parts = num.toString().split('.');
     //   const integerPart = parts[0];
@@ -18,42 +27,84 @@ function formatNumber(num) {
     };
 }
 
+//axios 錯誤處理
 //https://axios-http.com/zh/docs/handling_errors
-const axiosError = (error) => {
-    let title = '';
-    let text = '';
-    if (axios.isAxiosError(error)) {
-        if (error.code === "ERR_NETWORK") {
-            title = 'NETWORK Error';
-            text = "請檢查網路是否正常!!";
-        } else if (error.response?.status === 404) {
-            title = "Not Found";
-            text = '找不到網頁，請檢查網址是否正確!!';
-        } else if (error.response) {
-            title = error.status;
-            text = error.response.data.message;
-        } else if (error.request) {
-            title = 'Reques Error';
-            text = error.request;
-        } else {
-            title = 'Axios configuration error';
-            text = error.message;
-        }
-    } else {
-        title = 'Unexpected Error';
-        text = error.message;
-    }
+// 個人
+// const axiosError = (error) => {
+//     let title = '';
+//     let text = '';
+//     if (axios.isAxiosError(error)) {
+//         if (error.code === "ERR_NETWORK") {
+//             title = 'NETWORK Error';
+//             text = "請檢查網路是否正常!!";
+//         } else if (error.response?.status === 404) {
+//             title = "Not Found";
+//             text = '找不到網頁，請檢查網址是否正確!!';
+//         } else if (error.response) {
+//             title = error.status;
+//             text = error.response.data.message;
+//         } else if (error.request) {
+//             title = 'Reques Error';
+//             text = error.request;
+//         } else {
+//             title = 'Axios configuration error';
+//             text = error.message;
+//         }
+//     } else {
+//         title = 'Unexpected Error';
+//         text = error.message;
+//     }
 
-    if (title != '') {
-        Swal.fire({
+//     if (title != '') {
+//         Swal.fire({
+//             icon: "error",
+//             showCloseButton: true,//右上角X
+//             title: title,
+//             text: text
+//         });
+//     }
+// }
+
+//AI
+const axiosError = (error) => {
+    if (!axios.isAxiosError(error)) {
+        return Swal.fire({
             icon: "error",
-            showCloseButton: true,//右上角X
-            title: title,
-            text: text
+            showCloseButton: true,
+            title: 'Unexpected Error',
+            text: error.message
         });
     }
+
+    const { code, response, request, message } = error;
+    let title, text;
+
+    if (code === "ERR_NETWORK") {
+        title = 'NETWORK Error';
+        text = "請檢查網路是否正常!!";
+    } else if (response?.status === 404) {
+        title = 'Not Found';
+        text = '找不到網頁，請檢查網址是否正確!!';
+    } else if (response) {
+        title = response.status;
+        text = response.data?.message || message;
+    } else if (request) {
+        title = 'Request Error';
+        text = request;
+    } else {
+        title = 'Axios configuration error';
+        text = message;
+    }
+    Swal.fire({
+        icon: "error",
+        showCloseButton: true,
+        title,
+        text
+    });
 }
 
+//參考如下，包成一個方法
+//https://israynotarray.com/javascript/20220514/1988711685/
 //其實在在寫得更共用，但這樣會不好呼叫
 //20251027 try要包在外面層
 ////////////////GET//////////////
