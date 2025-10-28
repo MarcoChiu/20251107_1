@@ -17,13 +17,13 @@
 //新增產品至購物車
 // const postTemp1 = [
 //     { "data": { "productId": "6PkWdMDBB5lxUoa2zAE2", "quantity": 1 } },
-//     { "data": { "productId": "QrjXKCshVckgKrGTqkzq", "quantity": 3 } },
-//     { "data": { "productId": "YZAQwt3Q6rXGjxUsPcFY", "quantity": 5 } },
-//     { "data": { "productId": "d7X2DL5cRF5MsHLmpNOE", "quantity": 7 } },
-//     { "data": { "productId": "dYFboZBUKqFW1ZnIoYQ9", "quantity": 9 } },
-//     { "data": { "productId": "j79UktehKjADpHYfKUuG", "quantity": 11 } },
-//     { "data": { "productId": "nYFWTx5coNXRoQz5mIio", "quantity": 13 } },
-//     { "data": { "productId": "tg0o2s4KtJ2i4fqxioWM", "quantity": 15 } }
+//     { "data": { "productId": "QrjXKCshVckgKrGTqkzq", "quantity": 2 } },
+//     { "data": { "productId": "YZAQwt3Q6rXGjxUsPcFY", "quantity": 3 } },
+//     { "data": { "productId": "d7X2DL5cRF5MsHLmpNOE", "quantity": 4 } },
+//     { "data": { "productId": "dYFboZBUKqFW1ZnIoYQ9", "quantity": 5 } },
+//     { "data": { "productId": "j79UktehKjADpHYfKUuG", "quantity": 6 } },
+//     { "data": { "productId": "nYFWTx5coNXRoQz5mIio", "quantity": 7 } },
+//     { "data": { "productId": "tg0o2s4KtJ2i4fqxioWM", "quantity": 8 } }
 // ];
 
 // postApi(postTemp1.map(x => { return { url: cartsUrl, headers: null, obj: x }; }))

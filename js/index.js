@@ -13,13 +13,14 @@ const loading = document.querySelector('.loading-mask');
 const productSelect = document.querySelector('.productSelect');
 const productWrap = document.querySelector('.productWrap');
 //carts
-const cartsTable = document.querySelector('.shoppingCart-table');
+const shoppingCart = document.querySelector('.shoppingCart');
 const cartsBody = document.querySelector('.shoppingCart-table tbody');
 const cartsFooter = document.querySelector('.shoppingCart-table tfoot');
+//order
+const orderInfo = document.querySelector('#orderInfo');
 
 //render
 const rederProducts = (data) => {
-    //console.log(data);
     let html = '';
     data.products.forEach(x => html += `
          <li class="productCard">
@@ -35,7 +36,15 @@ const rederProducts = (data) => {
 }
 
 const redercarts = (data) => {
-    //console.log(data);
+    if (data.carts.length == 0) {
+        shoppingCart.classList.add('d-none');
+        orderInfo.classList.add('d-none');
+        return;
+    }
+
+    shoppingCart.classList.remove('d-none');
+    orderInfo.classList.remove('d-none');
+
     let html = '';
     data.carts.forEach(x => html += `
     <tr>
@@ -48,7 +57,7 @@ const redercarts = (data) => {
         <td>NT$${formatNumber(x.product.origin_price)}</td>
         <td>${formatNumber(x.quantity)}</td>
         <td>NT$${formatNumber(x.product.price)}</td>
-        <td class="discardBtn" data-id='${x.id}'>
+        <td class="discardBtn" data-id='${x.id}'  data-product-title='${x.product.title}'>
             <a href="javascript:void(0);" class="material-icons">
                 clear
             </a>
@@ -58,12 +67,18 @@ const redercarts = (data) => {
     cartsBody.innerHTML = html.length > 0 ? html : '<tr><td colspan="4">購物車中尚無資料!!</td></tr>';
     cartsFooter.innerHTML = `
 <tr>
-<td><a href="javascript:void(0);" class="discardAllBtn">刪除所有品項</a></td>
-<td></td>
-<td></td>
-<td><p>總金額</p></td><td>NT$${formatNumber(data.finalTotal)}</td>
+    <td>
+        ${data.carts.length > 0 ? `<a href="javascript:void(0);" class="discardAllBtn">刪除所有品項</a>` : ''}
+    </td>
+    <td></td>
+    <td></td>
+    <td>
+        ${data.carts.length > 0 ? `<p>總金額</p>` : ''}        
+    </td>
+    <td>
+        ${data.carts.length > 0 ? `NT$${formatNumber(data.finalTotal)}` : ''}    
+    </td>
 </tr>`;
-
 }
 
 //function
@@ -93,24 +108,66 @@ const productSelectChange = async (val) => {
     }
 }
 
+const deleteCartsConfirm = (id = "", productTitle = "") => {
+    const title = (id != "") ? `請問確定刪除${productTitle}?` : "請問確定刪除所有品項?";
+    Swal.fire({
+        title: title,
+        showCancelButton: true,
+        confirmButtonText: "刪除",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            deleteCarts(id);
+        }
+    });
+}
+
+const deleteCarts = async (id = "") => {
+    loading.classList.toggle('d-none');
+    try {
+        const response = await deleteApi([{ url: (id != "") ? cartsUrl + `/${id}` : cartsUrl }]);
+        redercarts(response[0].data);
+        Swal.fire("已刪除!!", "", "success");
+    } catch (error) {
+        axiosError(error);
+    } finally {
+        loading.classList.toggle('d-none');
+    }
+}
+
+const addCarts = async (id, qty) => {
+    loading.classList.toggle('d-none');
+    try {
+        let response = await getApi([{ url: cartsUrl }]);
+        const q = response[0].data.carts.find(x => x.product.id === id);
+        if (q == null) {
+            response = await postApi([{ url: cartsUrl, obj: { "data": { "productId": id, "quantity": qty } } }]);
+
+        } else {
+            response = await patchApi([{ url: cartsUrl, obj: { "data": { "id": q.id, "quantity": q.quantity + qty } } }]);
+        }
+        redercarts(response[0].data);
+    } catch (error) {
+        axiosError(error);
+    } finally {
+        loading.classList.toggle('d-none');
+    }
+}
+
 //addEventListener
 productSelect.addEventListener('change', (e) => {
     productSelectChange(e.target.value);
 });
 
-cartsTable.addEventListener("click", (e) => {
+document.addEventListener("click", (e) => {
     const discardBtn = e.target.closest(".discardBtn");
     const discardAllBtn = e.target.closest(".discardAllBtn");
+    const addCardBtn = e.target.closest(".addCardBtn");
 
-    if (discardBtn) {
-        console.log(discardBtn.getAttribute('data-id'));
+    discardBtn && deleteCartsConfirm(discardBtn.dataset.id, discardBtn.dataset.productTitle);
+    discardAllBtn && deleteCartsConfirm();
 
-        //discardBtn.parentElement.remove();
-    }
-    if (discardAllBtn) {
+    addCardBtn && addCarts(addCardBtn.dataset.id, 1);
 
-        console.log(discardAllBtn)
-    }
 });
 
 init();
