@@ -9,11 +9,14 @@ const OrdersUrl = `${baseUrl}/customer/${apiPath}/orders`;  //前台post訂單
 //物件
 const loading = document.querySelector('.loading-mask');
 //reder用
-const productWrap = document.querySelector('.productWrap');
+//products
 const productSelect = document.querySelector('.productSelect');
+const productWrap = document.querySelector('.productWrap');
+//carts
 const cartsTable = document.querySelector('.shoppingCart-table');
 const cartsBody = document.querySelector('.shoppingCart-table tbody');
 const cartsFooter = document.querySelector('.shoppingCart-table tfoot');
+
 //render
 const rederProducts = (data) => {
     //console.log(data);
@@ -80,8 +83,9 @@ const init = async () => {
 const productSelectChange = async (val) => {
     loading.classList.toggle('d-none');
     try {
-        const response = await getApi([{ url: productsUrl }]);        
-        (val != "") ? (response[0].data.products = response[0].data.products.filter(x => x.category === val)) : null; rederProducts(response[0].data);   
+        const response = await getApi([{ url: productsUrl }]);
+        (val != "") && (response[0].data.products = response[0].data.products.filter(x => x.category === val));
+        rederProducts(response[0].data);
     } catch (error) {
         axiosError(error);
     } finally {
@@ -99,11 +103,12 @@ cartsTable.addEventListener("click", (e) => {
     const discardAllBtn = e.target.closest(".discardAllBtn");
 
     if (discardBtn) {
-        console.log(discardBtn);
+        console.log(discardBtn.getAttribute('data-id'));      
 
         //discardBtn.parentElement.remove();
     }
     if (discardAllBtn) {
+
         console.log(discardAllBtn)
     }
 });

@@ -2,7 +2,7 @@
 
 //三位一撇
 function formatNumber(num) { 
-    //AI
+//AI
 //   const parts = num.toString().split('.');
 //   const integerPart = parts[0];
 //   const decimalPart = parts.length > 1 ? '.' + parts[1] : ''; 
