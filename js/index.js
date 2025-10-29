@@ -1,14 +1,10 @@
-//共用
+ //共用
 const productsUrl = `${baseUrl}/customer/${apiPath}/products`; //產品
 const cartsUrl = `${baseUrl}/customer/${apiPath}/carts`; //購物車
 const OrdersUrl = `${baseUrl}/customer/${apiPath}/orders`;  //前台post訂單
 
-//陣列
-//let productslist = [];
-
-//物件
-const loading = document.querySelector('.loading-mask');
-//reder用
+//dom
+const loading = document.querySelector('.loading-mask'); 
 //products
 const productSelect = document.querySelector('.productSelect');
 const productWrap = document.querySelector('.productWrap');
@@ -18,6 +14,9 @@ const cartsBody = document.querySelector('.shoppingCart-table tbody');
 const cartsFooter = document.querySelector('.shoppingCart-table tfoot');
 //order
 const orderInfo = document.querySelector('#orderInfo');
+//form
+const form = document.querySelector('form');
+const fields = ['customerName', 'customerPhone', 'customerEmail', 'customerAddress', 'tradeWay'];
 
 //render(主要渲染及產生畫面)
 const rederProducts = (data) => {
@@ -70,6 +69,8 @@ const redercarts = (data) => {
         </td>
     </tr>
         `);
+
+    //後來修改購物車無資料不顯示
     cartsBody.innerHTML = html.length > 0 ? html : '<tr><td colspan="4">購物車中尚無資料!!</td></tr>';
     cartsFooter.innerHTML = `
 <tr>
@@ -87,7 +88,7 @@ const redercarts = (data) => {
 </tr>`;
 }
 
-//function(主要處理Loading、資料傳遞及判斷)
+//function(資料傳遞、資料篩選、傳給渲染、Loading、sweetalert2、不抓取dom元素)
 const init = async () => {
     Loading.show();
     try {
@@ -115,11 +116,12 @@ const productSelectChange = async (val) => {
 }
 
 const deleteCartsConfirm = (id = "", title = "") => {
-    const t = (id != "") ? `請問確定刪除${title}?` : "請問確定刪除所有品項?";
+    const swalTitle = (id != "") ? `請問確定刪除${title}?` : "請問確定刪除所有品項?";
     Swal.fire({
-        title: t,
+        title: swalTitle,
         showCancelButton: true,
         confirmButtonText: "刪除",
+        confirmButtonColor: "#d33",
     }).then((result) => {
         if (result.isConfirmed) {
             deleteCarts(id);
@@ -140,7 +142,7 @@ const deleteCarts = async (id = "") => {
     }
 }
 
-const cartsEvent = async (id, qty, move = false, title = "") => {
+const addCarts = async (id, qty, move = false, title = "") => {
     Loading.show();
     try {
         let response = await getApi([{ url: cartsUrl }]);
@@ -158,7 +160,7 @@ const cartsEvent = async (id, qty, move = false, title = "") => {
         // } else {
         //     response = await patchApi([{ url: cartsUrl, obj: { "data": { "id": q.id, "quantity": q.quantity + qty } } }]);
         // }
-        //AI 判斷方法  判斷物件
+        //AI優化 判斷方法  判斷物件
         response = await (q == null ? postApi : patchApi)
             ([{
                 url: cartsUrl,
@@ -176,23 +178,76 @@ const cartsEvent = async (id, qty, move = false, title = "") => {
     }
 }
 
-//addEventListener(監聽)
+const postCarts = async (user) => {
+    Loading.show();
+    try {
+        let response = await postApi([{ url: OrdersUrl, headers: null, obj: { "data": { "user": user } } }]);
+        const orderId = response[0].data.id;
+        Swal.fire("購買成功!!", `訂單編號:<b>${orderId}<b>`, "success");
+        response = await getApi([{ url: cartsUrl }]); //這邊也可以改成給一個空的response但也許有多個網頁同時買所以還是抓了一次
+        redercarts(response[0].data);
+    } catch (error) {
+        axiosError(error);
+    } finally {
+        Loading.hide();
+    }
+}
+
+//addEventListener(監聽、判斷驗證、抓取dom元素) 
 productSelect.addEventListener('change', (e) => {
     productSelectChange(e.target.value);
 });
 
-//大範圍監聽
 document.addEventListener("click", (e) => {
     const discardBtn = e.target.closest(".discardBtn");
     const discardAllBtn = e.target.closest(".discardAllBtn");
     const addCardBtn = e.target.closest(".addCardBtn");
     const plusBtn = e.target.closest(".plusBtn");
     const minusBtn = e.target.closest(".minusBtn");
+
     discardBtn && deleteCartsConfirm(discardBtn.dataset.id, discardBtn.dataset.productTitle);
     discardAllBtn && deleteCartsConfirm();
-    addCardBtn && cartsEvent(addCardBtn.dataset.id, 1, true);
-    plusBtn && cartsEvent(plusBtn.dataset.id, 1);
-    minusBtn && cartsEvent(minusBtn.dataset.id, -1, false, minusBtn.dataset.productTitle);
+    addCardBtn && addCarts(addCardBtn.dataset.id, 1, true);
+    plusBtn && addCarts(plusBtn.dataset.id, 1);
+    minusBtn && addCarts(minusBtn.dataset.id, -1, false, minusBtn.dataset.productTitle);
+});
+
+form.addEventListener('submit', function (e) {
+    e.preventDefault(); // 先阻止表單送出
+    let allPass = true;
+    fields.forEach(id => {
+        const valid = validateForm(document.querySelector(`#${id}`));
+        if (!valid) allPass = false;
+    });
+    if (!allPass) return;
+    let user = {};
+    fields.forEach(id => {
+        const input = document.querySelector(`#${id}`);
+        switch (id) {
+            case "customerName":
+                user["name"] = input.value;
+                break;
+            case "customerPhone":
+                user["tel"] = input.value;
+                break;
+            case "customerEmail":
+                user["email"] = input.value;
+                break;
+            case "customerAddress":
+                user["address"] = input.value;
+                break;
+            case "tradeWay":
+                user["payment"] = input.value;
+                break;
+        }
+    });
+    postCarts(user);
+});
+
+fields.forEach(id => {
+    //監聽多個欄位，如有更好請再提供
+    const input = document.querySelector(`#${id}`);
+    input.addEventListener('blur', () => validateForm(input));
 });
 
 init();

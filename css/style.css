@@ -818,6 +818,18 @@
      color: #C72424;
  }
 
+/* Marco */
+ .orderInfo-message.error {
+     color: red;
+     font-weight: bold;
+     visibility: visible;
+ }
+
+ .orderInfo-message {
+     visibility: hidden;
+     /* 預設隱藏 */
+ }
+
  @media (max-width: 767px) {
      .orderInfo-message {
          position: static;

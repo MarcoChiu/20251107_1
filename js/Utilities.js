@@ -1,8 +1,49 @@
 //##############共用function##############
 
+//驗證表單
+const validateForm = (input) => {
+    //錯誤訊息填入的地方
+    const errObj = input.closest('.orderInfo-inputWrap').querySelector('.orderInfo-message');
+    let isValid = true;
+
+    // 先清除狀態
+    errObj.textContent = '';
+    errObj.classList.remove('error');
+
+    // 檢查是否為空
+    if (input.value.trim() === '') {
+        errObj.textContent = input.tagName === "SELECT" ? `請選擇${input.name}` : `請輸入${input.name}`;
+        errObj.classList.add('error');
+        isValid = false;
+    }
+
+    // Email 格式驗證
+    if (input.id === 'customerEmail' && input.value.trim() !== '') {
+        //AI
+        const emailReg = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailReg.test(input.value)) {
+            errObj.textContent = 'Email 格式不正確';
+            errObj.classList.add('error');
+            isValid = false;
+        }
+    }
+
+    // 手機格式驗證
+    if (input.id === 'customerPhone' && input.value.trim() !== '') {
+        //09後面八碼
+        const phoneReg = /^09\d{8}$/;
+        if (!phoneReg.test(input.value)) {
+            errObj.textContent = '電話手機格式不正確';
+            errObj.classList.add('error');
+            isValid = false;
+        }
+    }
+
+    return isValid;
+}
+
 //AI 平滑到物件  
 const scrollToId = (element) => {
-   
     const el = document.querySelector(element);
     if (el) {
         el.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -65,7 +106,7 @@ const formatNumber = (num) => {
 //     }
 // }
 
-//AI
+//AI 優化
 const axiosError = (error) => {
     if (!axios.isAxiosError(error)) {
         return Swal.fire({
