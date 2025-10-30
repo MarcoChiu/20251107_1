@@ -1,5 +1,22 @@
 //##############共用function##############
 
+//AI 
+const formatDateTime = (UnixTime) => {     
+    let date = new Date(parseInt(UnixTime) * 1000); //六角格式要X1000
+    let y = date.getFullYear();
+    let m = date.getMonth() + 1;
+    m = m < 10 ? ('0' + m) : m;
+    let d = date.getDate();
+    d = d < 10 ? ('0' + d) : d;
+    let h = date.getHours();
+    h = h < 10 ? ('0' + h) : h;
+    let minute = date.getMinutes();
+    let second = date.getSeconds();
+    minute = minute < 10 ? ('0' + minute) : minute;
+    second = second < 10 ? ('0' + second) : second;
+    return y + '-' + m + '-' + d + ' ' + h + ':' + minute + ':' + second;
+};
+
 //驗證表單
 const validateForm = (input) => {
     //錯誤訊息填入的地方
@@ -51,21 +68,22 @@ const scrollToId = (element) => {
 }
 
 //AI 三位一撇
-const formatNumber = (num) => {
+const formatNumber = (num, decimalPlaces = 0) => {
     //AI
-    //   const parts = num.toString().split('.');
-    //   const integerPart = parts[0];
-    //   const decimalPart = parts.length > 1 ? '.' + parts[1] : ''; 
-    //   const formattedIntegerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    //   return formattedIntegerPart + decimalPart;
+    // 1. 确保输入是字符串，并保留指定小数位数
+    let fixedNum = num.toFixed(decimalPlaces);
 
-    //https://tianbianyu.com/41/
-    if (typeof num === 'number') {
-        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    } else {
-        //console.warn('工具方法类警告: 输入参数并非数字类型');
-        return num;
-    };
+    // 2. 分离整数和小数部分
+    let parts = fixedNum.split('.');
+    let integerPart = parts[0];
+    let decimalPart = parts.length > 1 ? '.' + parts[1] : '';
+
+    // 3. 使用正则表达式给整数部分添加千位分隔符
+    let regex = /(\d)(?=(\d{3})+(?!\d))/g;
+    integerPart = integerPart.replace(regex, '$1,');
+
+    // 4. 组合结果
+    return integerPart + decimalPart;    
 }
 
 //axios 錯誤處理

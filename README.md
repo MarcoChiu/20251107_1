@@ -35,3 +35,31 @@
 - 2.訂單狀態修改
 - 3.圓餅圖1~3剩餘加到其他
 
+## 重點技術
+### Javasript
+- 三元運算 判斷?true:false ;
+- true && 執行 ;
+- false || 執行 ;
+- filter
+- forEach
+- reduce
+- map
+- sort
+- Object.entries
+- try catch finally
+- async await
+- Promise.all
+- document.addEventListener監聽大範圍
+### 畫面
+- 渲染畫面
+- loading
+### 套件
+- axios + axiosError處理
+- sweetalert2
+- c3.js
+### 其他
+- 表單驗證
+- 平滑到物件  
+- 三位一撇
+- UnixTime時間轉換
+- localStorage

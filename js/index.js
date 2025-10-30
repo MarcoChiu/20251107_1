@@ -1,16 +1,16 @@
- //共用
+//共用
 const productsUrl = `${baseUrl}/customer/${apiPath}/products`; //產品
 const cartsUrl = `${baseUrl}/customer/${apiPath}/carts`; //購物車
 const OrdersUrl = `${baseUrl}/customer/${apiPath}/orders`;  //前台post訂單
 
 //dom
-const loading = document.querySelector('.loading-mask'); 
+const loading = document.querySelector('.loading-mask');
 //products
 const productSelect = document.querySelector('.productSelect');
 const productWrap = document.querySelector('.productWrap');
 //carts
 const shoppingCart = document.querySelector('.shoppingCart');
-const cartsBody = document.querySelector('.shoppingCart-table tbody');
+const cartBody = document.querySelector('.shoppingCart-table tbody');
 const cartsFooter = document.querySelector('.shoppingCart-table tfoot');
 //order
 const orderInfo = document.querySelector('#orderInfo');
@@ -34,7 +34,7 @@ const rederProducts = (data) => {
     productWrap.innerHTML = html.length > 0 ? html : '<li class="productCard">查無產品資料!!</li>';
 }
 
-const redercarts = (data) => {
+const rederCarts = (data) => {
     //個人
     // if (data.carts.length === 0) {
     //     [shoppingCart, orderInfo].forEach(el => el.classList.add('d-none'));
@@ -56,13 +56,13 @@ const redercarts = (data) => {
             </div>
         </td>
         <td>NT$${formatNumber(x.product.origin_price)}</td>
-        <td>
+        <td  nowrap="nowrap">
             <button type="button" class="plusBtn" data-id='${x.product.id}'>+</button> 
              ${formatNumber(x.quantity)}  
-            <button type="button" class="minusBtn" data-id='${x.product.id}'  data-product-title='${x.product.title}'>-</button> 
+            <button type="button" class="minusBtn" data-id='${x.product.id}'  data-title='${x.product.title}'>-</button> 
         </td>
         <td>NT$${formatNumber(x.product.price)}</td>
-        <td class="discardBtn" data-id='${x.id}'  data-product-title='${x.product.title}'>
+        <td class="discardBtn" data-id='${x.id}'  data-title='${x.product.title}'>
             <a href="javascript:void(0);" class="material-icons">
                 clear
             </a>
@@ -71,7 +71,7 @@ const redercarts = (data) => {
         `);
 
     //後來修改購物車無資料不顯示
-    cartsBody.innerHTML = html.length > 0 ? html : '<tr><td colspan="4">購物車中尚無資料!!</td></tr>';
+    cartBody.innerHTML = html.length > 0 ? html : '<tr><td colspan="4">購物車中尚無資料!!</td></tr>';
     cartsFooter.innerHTML = `
 <tr>
     <td>
@@ -88,13 +88,13 @@ const redercarts = (data) => {
 </tr>`;
 }
 
-//function(資料傳遞、資料篩選、傳給渲染、Loading、sweetalert2、不抓取dom元素)
+//function(資料傳遞、資料篩選、傳給渲染、Loading、sweetalert2)
 const init = async () => {
     Loading.show();
     try {
         const response = await getApi([{ url: productsUrl }, { url: cartsUrl }]);
         rederProducts(response[0].data);
-        redercarts(response[1].data);
+        rederCarts(response[1].data);
     } catch (error) {
         axiosError(error);
     } finally {
@@ -116,9 +116,10 @@ const productSelectChange = async (val) => {
 }
 
 const deleteCartsConfirm = (id = "", title = "") => {
-    const swalTitle = (id != "") ? `請問確定刪除${title}?` : "請問確定刪除所有品項?";
+    const swalText = (id != "") ? `請問確定刪除購物車品項${title}?` : "請問確定刪除購物車所有品項?";
     Swal.fire({
-        title: swalTitle,
+        title: "刪除購物車",
+        text:swalText,
         showCancelButton: true,
         confirmButtonText: "刪除",
         confirmButtonColor: "#d33",
@@ -133,7 +134,7 @@ const deleteCarts = async (id = "") => {
     Loading.show();
     try {
         const response = await deleteApi([{ url: (id != "") ? cartsUrl + `/${id}` : cartsUrl }]);
-        redercarts(response[0].data);
+        rederCarts(response[0].data);
         Swal.fire("已刪除!!", "", "success");
     } catch (error) {
         axiosError(error);
@@ -169,7 +170,7 @@ const addCarts = async (id, qty, move = false, title = "") => {
                 }
             }]);
 
-        redercarts(response[0].data);
+        rederCarts(response[0].data);
         move && scrollToId('.shoppingCart');
     } catch (error) {
         axiosError(error);
@@ -185,7 +186,8 @@ const postCarts = async (user) => {
         const orderId = response[0].data.id;
         Swal.fire("購買成功!!", `訂單編號:<b>${orderId}<b>`, "success");
         response = await getApi([{ url: cartsUrl }]); //這邊也可以改成給一個空的response但也許有多個網頁同時買所以還是抓了一次
-        redercarts(response[0].data);
+        rederCarts(response[0].data);
+        form.reset();
     } catch (error) {
         axiosError(error);
     } finally {
@@ -205,14 +207,14 @@ document.addEventListener("click", (e) => {
     const plusBtn = e.target.closest(".plusBtn");
     const minusBtn = e.target.closest(".minusBtn");
 
-    discardBtn && deleteCartsConfirm(discardBtn.dataset.id, discardBtn.dataset.productTitle);
+    discardBtn && deleteCartsConfirm(discardBtn.dataset.id, discardBtn.dataset.title);
     discardAllBtn && deleteCartsConfirm();
     addCardBtn && addCarts(addCardBtn.dataset.id, 1, true);
     plusBtn && addCarts(plusBtn.dataset.id, 1);
-    minusBtn && addCarts(minusBtn.dataset.id, -1, false, minusBtn.dataset.productTitle);
+    minusBtn && addCarts(minusBtn.dataset.id, -1, false, minusBtn.dataset.title);
 });
 
-form.addEventListener('submit', function (e) {
+form.addEventListener('submit', (e) => {
     e.preventDefault(); // 先阻止表單送出
     let allPass = true;
     fields.forEach(id => {
