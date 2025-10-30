@@ -25,17 +25,17 @@ const validateForm = (input) => {
 
     // 先清除狀態
     errObj.textContent = '';
-    errObj.classList.remove('error');
+    errObj.classList.remove('error');    
 
-    // 檢查是否為空
-    if (input.value.trim() === '') {
+    // 必填欄位 且為空值時
+    if (input.required && input.value.trim() === '') {
         errObj.textContent = input.tagName === "SELECT" ? `請選擇${input.name}` : `請輸入${input.name}`;
         errObj.classList.add('error');
         isValid = false;
-    }
+    }    
 
     // Email 格式驗證
-    if (input.id === 'customerEmail' && input.value.trim() !== '') {
+    if (input.type === 'email' && input.value.trim() !== '') {//
         //AI
         const emailReg = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailReg.test(input.value)) {
@@ -46,7 +46,7 @@ const validateForm = (input) => {
     }
 
     // 手機格式驗證
-    if (input.id === 'customerPhone' && input.value.trim() !== '') {
+    if (input.type === 'tel'&& input.value.trim() !== '') {// 
         //09後面八碼
         const phoneReg = /^09\d{8}$/;
         if (!phoneReg.test(input.value)) {

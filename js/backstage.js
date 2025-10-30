@@ -58,8 +58,6 @@ const renderChart = (val, data = null) => {
 
             //AI搞得超強
             //result = Object.entries(data.orders.flatMap(o => o.products).reduce((a, { category, price, quantity }) => (a[category] = (a[category] || 0) + price * quantity, a), {}));
-
-
             break;
         case 1:
             //2.全品項營收比重，類別含四項，篩選出前三名營收品項，其他 4~8 名都統整為「其它」
